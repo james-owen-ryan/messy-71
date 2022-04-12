@@ -1,0 +1,233 @@
+% The following "lexical expressions" were authored by Theresa Chen and Piper Welch during
+% the 2020-21 academic year at Carleton College. The project was undertaken with James
+% Ryan, then a visiting assistant professor in the Computer Science department at
+% Carleton, where Theresa and Piper were members of his research group, the Studio
+% for ((Computational Media) Archaeology), or SCMA.
+
+% The lexical expressions here specify how various simulation entities may be referred to in
+% natural language, using the format introduced in Klein et al. (1971). They pertain to a simulation
+% that produces murder "mysteries" transpiring in the course of a dinner party. It extends the partially
+% implemented generator presented in Klein et al. (1971) by using the same characters and many of the
+% same initial conditions for the storyworld. This system also takes inspiration from the completed story
+% generator presented in Klein et al. (1973).
+
+
+George:			  The computer-manufacturer, the boss, George
+Margaret:		  Margaret, George's wife
+Laslo:				Laslo, the systems-analyst
+Medea:				Medea, Laslo's wife, the project-manager
+Henri:				Henri, the director, the director-of-the-computer-center
+Helene:			  Helene, Henri's wife, the pianist
+Umberto:			Umberto, the bachelor, the race-car-driver, the Italian
+Philip:			  Philip, the poet
+Lili:				  Lili, the computer-programmer
+Suzanne:			Suzanne, the pilot
+Gilda:				Gilda, the nightclub-singer
+Dehume:       Dehume, the detective
+glroom:			  living room
+gbasement:		basement
+gfactory:		  factory
+goffice:			office
+gapt:			    apartment, George's apartment
+suzapt:			  Suzanne's apartment
+lasloapt:	  	Laslo's apartment
+umbhtrm:			Umberto's hotel room
+computing:		computing
+cigars:			  cigars
+gambling:		  gambling
+niteclubs:		nightclubs
+drink:			  drink, cocktail
+party:			  party
+gourmets:		  gourmet cooking
+beethovn:		  beethoven
+debussy:			Debussy
+alcholol:		  alchol, liquor, wine
+basement:		  basement
+garden:		    garden
+bathroom:		  bathroom
+bedroom:			bedroom
+diningrm:		  dining room 
+reject:			  rejection
+witness:			witness
+revenge:			revenge
+affair:       affair
+arrests:      arrests
+arrested:     arrested
+arson:        arson
+arsonist:     arsonist
+blckjack:     blackjack
+body:         body
+car:          car
+cndlhlr:      candleholder
+debt:         debt
+fire:         fire
+firedept:     fire department
+fngprint:     fingerprint
+gun:          gun
+hands:        hands
+knife:        knife
+lfinsrnc:     life insurance
+money:				money
+mrdrinjr:     injury from murder
+mrdrroom:     murder room
+mrdrwpn:      murder weapon
+murderer:     murderer
+nobody:       nobody
+poison:       poison
+pond:         pond
+police:       police
+rock:         rock
+scream:       scream
+seen:         seen
+selfdefn:     self defense
+umbrtrm:      umberto's room
+In:					  is in
+likes:				likes
+married:			is married
+smokes:			  smokes
+dislikes:		  dislikes
+loves:				loves
+works:				works for
+bores:				bores
+mistress:		  is mistress of
+hates:				hates
+angry:				is angry
+wants:				wants
+invites:			invites
+get:					gets, obtains
+IX1:					is tipsy
+IX2:					is mildly drunk
+IX3:					is drunk
+props:				propositions
+accept:			  accepts
+accepts:      accepts
+know:         knows
+knows:				knows
+brother:			brother of
+sister:		  	sister of
+dark:				  is dark
+bald:			  	is bald
+short:				is short
+passion:			is passionate
+policeman:    policeman
+plump:				is plump
+slim:				  is slim
+rich:			  	is rich
+Hungarn:			is Hungarian
+jealous:			is jealous
+tall:				  is tall
+blond:				is blond
+blueyed:			is blue-eyed
+medium:		  	is medium-height
+Italian:			is Italian
+handsome:			is handsome
+sexy:				  is sexy
+single:			  is single
+hasrcrd:      has a record
+nosy:         is nosy
+
+2murder:      to murder
+acceptsp:     accepts proposition of
+accepts:			accepts
+accuses:			accuses
+attacker:     attacker
+attackr:      is the attacker
+attack:       attack
+accused:			accused
+affairw:			has affair with
+arrest:		  	arrest
+arrive:		  	arrive
+at:				  	at
+atcrmscn:     at the crime scene
+blackml:      blackmails
+call:				  call
+called:			  called
+confess:			confesses
+corner:			  corner
+cometo:       come to
+crimescn:     crime scene
+dead:				  is dead
+deductmt:		  deducts motive is
+determin:	    determines
+determnd:     determined
+diesin:			  dies in
+discovers:		discovers
+discover:     discover
+dislikes:		  dislikes
+fights:			  fights
+fight:        fight
+find:				  find
+found:        is found
+framed:			  is framed
+frames:			  frames
+gclyinb:      gets caught lying by
+get:				  gets
+has:					has
+hasb:				  has been
+hates:				hates
+have:			  	have
+hear:			  	hears
+in:				  	is in
+inv:					investigates
+invites:			invites
+is:					  is
+isin:				  is in
+kcar:				  kills with a car	
+kcndlhlr:		  kills with the candle holder
+kfire:				kills with fire 
+kgun:				  kills with a gun 
+khands:			  kills with their hands
+kknife:				kills with knife
+know:					knows
+kpoison:			kills with poison
+krock:				kills with rock
+lie2:         lies to
+likely:				likely
+maim:					maims
+maimed:			  is maimed
+mdrtmein:			during the murder time was in
+miffed:				is miffed
+motiveis:			motive is	
+motive:		  	motive
+move:					move
+mrdrin:				murders in
+mrdrtmein:    during the murder time was in
+murder:				murder
+murders:      murders
+occurs:				occurs, happens
+occurred:     occurred, happened
+props:			  propositions
+proped:       propositioned
+putupa:       puts up a
+qspouseo:			questions spouse of
+question:			question	
+questned:     questioned						
+questions:		questions
+questnb:      questioned by
+rejects:			rejects
+resist:				resists
+rich:					is rich
+s1:						slightly suspicious	
+s2:           highly suspicious, very suspicious
+screamat:			screams at
+searched:     searched
+searchb:      searched by
+see:          see
+sees:         sees
+setfiret:		  sets fire to
+spouse:       is the spouse of
+suspect:		  suspect
+suspects:			suspects
+tase:					tase
+tipsoff:      tips off
+tdrink:				throws drink at		
+ttdtfm:				tries to defend themselves from murder by
+uses:					uses
+victim:				victim	
+wants:				wants
+wasin:				was in 
+was:          was
+wins:					wins
+wkill:				wants to kill
+wprop:				will proposition 
+wslap:				wants to slap

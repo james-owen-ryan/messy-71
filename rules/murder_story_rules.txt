@@ -1,0 +1,838 @@
+% The following simulation rules were authored by Theresa Chen and Piper Welch during
+% the 2020-21 academic year at Carleton College. The project was undertaken with James
+% Ryan, then a visiting assistant professor in the Computer Science department at
+% Carleton, where Theresa and Piper were members of his research group, the Studio
+% for ((Computational Media) Archaeology), or SCMA.
+
+% The rules here define a story generator that produces murder "mysteries" transpiring in the
+% course of a dinner party. It extends the partially implemented generator presented in
+% Klein et al. (1971) by using the same characters and many of the same initial conditions for
+% the storyworld. This system also takes inspiration from the completed story generator
+% presented in Klein et al. (1973).
+
+
+%      PRELUDE SCENE: GEORGE AND LILI HAVE AFFAIR
+$RULE        GEORGE AFFAIRW LILI;
+0, -10:      [T < 1720];
+10, 0:       (GEORGE BALD);
+
+%      PRELUDE SCENE: GEORGE GOES GAMBLING PART 1, DOES HE WIN BIG
+$RULE        GEORGE RICH,
+             GEORGE WINS BLCKJACK;
+0, -10:      [T < 1720];
+0.5, 0:      (GEORGE LIKES GAMBLING);
+
+%      PRELUDE SCENE: GEORGE GOES GAMBLING PART 2, DOES HE LOSE EVERYTHING
+$RULE        GEORGE IN DEBT;
+0, -10:      [T < 1731] & [T > 1720];
+0, -10:      (GEORGE WINS=0 BLCKJACK);
+10, 0:       (GEORGE !=WINS BLCKJACK); 
+
+%      PRELUDE SCENE: OBTAINING LIFE INSURANCE 
+$RULE        Y.PEOPLE HAS LFINSRNC;
+.2, -.1:    (Y RICH);
+0, -10:      [T < 1741] & [T > 1730];
+0, -.6:     (Y LIKES GAMBLING);
+0, -.2:     (Y LIKES ALCOHOL);
+0, -.2:     (Y SMOKES CIGARS);
+0, -.2:     (Y LIKES NITECLB);
+.4, 0:      (Y ISIN COMPUTING);
+
+%      RULE FOR INVITING PEOPLE TO THE PARTY
+$RULE        GEORGE INVITES Y.PEOPLE,
+             GEORGE !=WANTS PARTY;
+-10, 0:      (GEORGE DEAD);
+-10, 0:      (Y DEAD);
+-10, 0:      (GEORGE !=WANTS PARTY);
+10, 0:       (Y ISIN COMPUTING)
+           & (GEORGE KNOWS/LIKES/LOVES Y);
+.7, 0:       (GEORGE LIKES/LOVES Y);
+.7, 0:       (MARGARET LIKES/LOVES Y);
+.3, 0:       (GEORGE KNOWS/HATES Y);
+.5, 0:       (GEORGE INVITES #SPOUSE.PEOPLE) & (Y MARRIED #SPOUSE);
+
+%     RULE FOR ARRIVING AT GEORGE'S LIVING ROOM
+$RULE        X.PEOPLE IN GLROOM,
+             GEORGE !=INVITES X;
+-10, 0:      (GEORGE DEAD);
+-10, 0:      (MURDER OCCURRED);
+-10, 0:      (X DEAD);
+-10, 0:      (X IN GLROOM);
+0, -10:       (GEORGE INVITES X);
+.4, 0:       [T > 1859];
+.4, 0:       [T > 1911];
+.2, 0:       [T > 1921];
+
+%     RULE FOR GETTING PEOPLE TO DRINK
+$RULE        X.PEOPLE GET DRINK;
+-10, 0:      (X DEAD);
+-10, 0:      (MURDER OCCURRED);
+0, -10:      (X IN GLROOM);
+-.1, 0:      [T > 2200/ T < 1730];
+-.1, 0:      [T > 2300/ T < 1730];
+-.1, 0:      [T < 1730];
+.7, 0:       (X !=IX1 & GET>19 DRINK);
+.3, 0:       (X LIKES ALCOHOL);
+.4, 0:       (X SAD);
+.8, 0:       (X !=GET DRINK);
+
+%     RULE FOR ENTERING STATES IX1, IX2, IX3
+$RULE        X.PEOPLE IX1;
+-10, 0:      (X DEAD);
+.9, 0:       (X GET=0 DRINK);
+$RULE        X.PEOPLE IX2,
+             X        IX1;
+-10, 0:      (X DEAD);
+.9, 0:       (X IX1!=0 & IX1<21 & GET=0 DRINK);
+$RULE        X.PEOPLE IX3,
+             X        IX2,
+             X        IX1;
+-10, 0:      (X DEAD);
+.9, 0:       (X IX2!=0 & IX2<21 & GET=0 DRINK);
+
+%     RULE FOR MAKING PEOPLE LEAVE IX1, IX2, IX3
+$RULE        X.PEOPLE !=IX3;
+-10, 0:      (X DEAD);
+.6, 0:       (X GET>90 DRINK);
+
+$RULE        X.PEOPLE !=IX2;
+-10, 0:      (X DEAD);
+.7, 0:       (X !=IX3 & GET>120 DRINK);
+
+$RULE        X.PEOPLE !=IX3;
+-10, 0:      (X DEAD);
+.8, 0:       (X !=IX2 & GET>150 DRINK);
+
+%     RULE FOR FOR DETERMINING WHETHER X.WOMEN PROPOSITIONS SOME MAN
+$RULE        X.WOMEN PROPS Y.MEN:1;
+-10, 0:      (X PROPS #P.PEOPLE);
+-10, 0:      (MURDER OCCURRED);
+-10, 0:      (Y DEAD);
+-10, 0:      (X DEAD);
+0, -10:      (X IN GLROOM) & (Y IN GLROOM);
+-10, 0:      (X MARRIED Y);
+.2, .1:      (X IN IX1);
+.2, 0:       (X IN IX2);
+-.1, 0:      (X IN IX3);
+-.1, 0:      (X DISLIKES Y);
+.6, 0:       (Y HANDSOME);
+
+%     RULE FOR DETERMINING ACCEPTANCE OF X'S PROPOSITION BY Y
+$RULE        Y.MEN:1 ACCEPTSP X.WOMEN;
+-10, 0:      (MURDER OCCURRED);
+-10, 0:      (Y DEAD);
+0, -10:      (X PROPS Y);
+-10, 0:      (Y REJECTS X);
+0, -10:      (X IN GLROOM)
+             & (Y IN GLROOM);
+.1, .9:      (Y MARRIED #.WOMEN);
+.2, 0:       (Y IX2);
+.1, 0:       (Y IX3);
+
+%    RULE FOR REJECTING X'S PROPOSITION
+$RULE       Y.MEN:1 REJECTS X.WOMEN;
+-10, 0:     (MURDER OCCURRED);
+-10, 0:     (Y DEAD);
+-10, 0:     (Y REJECTS X);
+-10, 0:     (X PROPS Y)
+          & (Y ACCEPTSP X);
+10, 0:      (X PROPS=20 Y) & (Y !=ACCEPTSP=10 X);
+
+
+%    RULE FOR GEORGE WITNESSING X'S PROPOSITION
+$RULE    GEORGE WPROP Y.MEN,
+         X.WOMEN MIFFED;
+-10, 0:     (MURDER OCCURRED);
+-10, 0:     (Y DEAD);
+-10, 0:     (Y IS GEORGE);
+.1, -10:    (X PROPS Y);
+.1, 0:      (X IN IX1);
+.2, 0:      (X IN IX3);
+-.1, 0:     (X IN IX3);
+
+%     RULE FOR DETERMINING WHETHER GOING TO GARDEN OCCURS (AND REMEMBERING THAT GARDEN OCCURRED)
+$RULE        X.WOMEN HAS AFFAIR,
+             Y.MEN:1 !=IN GLROOM,
+             Y IN GARDEN,
+             X !=IN GLROOM,
+             X WASIN GARDEN,
+             X AFFAIRW Y,
+             AFFAIR AT PARTY,
+             Y WASIN GARDEN;
+-10, 0:      (MURDER OCCURRED);
+.4, -10:     (Y ACCEPTSP X);
+.4, 0:       [T > 2200];
+
+
+%    RULE FOR WITNESSING AFFAIR
+$RULE        Y.PEOPLE:1 WITNESS AFFAIR,
+             Y WASIN GARDEN;
+-10, 0:      (MURDER OCCURRED);
+0, -10:      (AFFAIR AT PARTY);
+-10, 0:      (Y DEAD);
+0.1, 0:      (Y SMOKES CIGARS);
+0.4, 0:      (Y LIKES GARDENS);
+
+%   RULE FOR X.WOMEN DISCOVERING WITNESS
+$RULE    Y.WOMEN:1 DISCOVER X.PEOPLE,
+         Y DISCOVER WITNESS;
+0, -10:    (Y HAS AFFAIR);
+0, -10:    (X WASIN GARDEN);
+-10, 0:     (Y DISCOVER WITNESS);
+-10, 0:    (Y AFFAIRW X);
+0.2, -10:  (X WITNESS AFFAIR);
+0.5, 0:    (X IX2) &
+           (X IX3);
+.2, 0:     [T < 2000];
+
+
+%   RULE FOR WITNESS BLACKMAILING X.WOMEN
+$RULE    Y.PEOPLE BLACKML X.WOMEN;
+-10, 0:     (MURDER OCCURRED);
+.3, -10:    (Y WITNESS AFFAIR);
+0, -10:     (X HAS AFFAIR);
+.2, 0:      (Y IX1);
+.3, 0:      (Y IX2);
+.5, 0:      (Y HATES X);
+-.2, 0:     (Y LIKES X);
+
+%    RULE FOR PEOPLE HAVING AFFAIR RETURNING TO LIVING ROOM
+$RULE       X.WOMEN IN GLROOM,
+            Y.MEN:1 IN GLROOM,
+            X !=IN GARDEN,
+            Y !=IN GARDEN;
+-10, 0:     (X IN GLROOM);
+10, -10:    (X AFFAIRW Y);
+
+
+%     RULE FOR GEORGE SUSPECTING AFFAIR WITH THE PERSON MARGARET WAS PROPOSITIONING
+$RULE        GEORGE SUSPECTS Y.MEN:1;
+-10, 0:      (MURDER OCCURRED);
+0, -10:      (MARGARET ACCEPTSP Y);
+10, 0:       (GEORGE WITNESS AFFAIR);
+.2, .1:      (GEORGE IX1);
+.2, 0:       (GEORGE IX2);
+-.2, 0:      (GEORGE IX3);
+.6, 0:       (GEORGE IN GARDEN);
+0, -.1:      (Y ISIN COMPUTING);
+.1, 0:       (Y HANDSOME);
+
+%    RULE FOR MARGARET THROWING HER DRINK AT SOMEBODY
+$RULE        MARGARET TDRINK Y.PEOPLE;
+-10, 0:       (MURDER OCCURRED);
+-10, 0:      (Y DEAD);
+-10, 0:      (Y ISIN COMPUTING);
+.2, 0:       (MARGARET IX1);
+.3, 0:       (MARGARET IX2);
+.4, 0:       (MARGARET IX3);
+0, -.3:      (MARGARET LIKES/LOVES Y);
+10, 0:        (Y IS GEORGE);
+
+%    RULE FOR MARGARET HATING Y.PEOPLE
+$RULE        MARGARET HATES Y.PEOPLE;
+-10, 0:      (MURDER OCCURRED);
+0, -10:      (Y ISIN COMPUTING);
+-10, 0:      (Y DEAD);
+.2, -.1:     (MARGARET IX1);
+.3, .1:      (MARGARET IX2);
+.4, 0:       (MARGARET IX3);
+-10, 0:       (MARGARET HATES Y);
+10, 0:       (Y IS GEORGE);
+
+%    RULE FOR GEORGE WANTS TO SLAP Y.PEOPLE
+$RULE        GEORGE WSLAP Y.PEOPLE;
+-10, 0:      (MURDER OCCURRED);
+-10, 0:      (Y DEAD);
+-10, 0:      (Y IS GEORGE);
+0, -10:      (Y ISIN COMPUTING);
+0, -.1:      (GEORGE IX1);
+0, -.1:      (GEORGE IX2);
+0, .3:       (GEORGE IX3);
+.5, 0:       (GEORGE HATES Y) & (Y ACCEPTSP/<-ACCEPTSP MARGARET);
+.1, 0:       (Y IS GEORGE);
+
+%    RULE FOR MARGARET WANTS TO SLAP Y.PEOPLE
+$RULE        MARGARET WSLAP Y.PEOPLE;
+-10, 0:      (MURDER OCCURRED);
+-10, 0:      (Y IS MARGARET);
+0, -10:      (Y ISIN COMPUTING);
+-10, 0:      (Y DEAD);
+0, -.1:      (MARGARET IX1);
+0, -.1:      (MARGARET IX2);
+0, .3:       (MARGARET IX3);
+.1, 0:       (Y IS GEORGE);
+
+%    RULE FOR Y.PEOPLE:1 MOVING TO THE BATHROOM
+$RULE       X.PEOPLE !=IN Y.ROOMS:1,
+            X IN BATHROOM,
+            X WASIN BATHROOM;
+-10, 0:     (X DEAD);
+-10, 0:     (X WASIN BATHROOM);
+0, -10:     (X IN Y);
+.4, 0:      (X IN IX1);
+
+%    RULE FOR Y.PEOPLE:1 COMING BACK TO LIVING ROOM
+$RULE       Y.PEOPLE:1 IN GLROOM,
+            Y !=IN BATHROOM;
+0, -10:     (Y IN=0 BATHROOM);
+-10, 0:     (Y IN GLROOM);
+10, 0:      (Y WASIN BATHROOM);
+
+
+%    RULE FOR X.WOMEN WANTS TO KILL Y.PEOPLE FOR BEING WITNESS
+$RULE        X.WOMEN WKILL Y.PEOPLE:1,
+             X MOTIVEIS WITNESS;
+-10, 0:      (MURDER OCCURRED);
+-10, 0:      (Y DEAD);
+0.5, -10:    (Y.PEOPLE WITNESS AFFAIR);
+.9, 0:       (X DISCOVER Y);
+10, 0:       (Y.PEOPLE BLACKML X);
+
+%    RULE FOR X.PEOPLE WANTS TO KILL Y.PEOPLE FOR REJECTING PROPOSITION
+$RULE        X.PEOPLE WKILL Y.PEOPLE:1,
+             X.PEOPLE MOTIVEIS REJECT;
+-10, 0:      (MURDER OCCURRED);
+-10, 0:      (Y DEAD);
+-10, 0:      (X DEAD);
+-10, 0:      (X MOTIVEIS WITNESS);
+-10, 0:      (X IS Y);
+10, 0:      (Y REJECTS X);
+
+%    RULE FOR X.PEOPLE WANTS TO KILL Y.PEOPLE FOR INHERITANCE
+$RULE       X.PEOPLE WKILL Y.PEOPLE:1,
+            X.PEOPLE MOTIVEIS MONEY;
+-10, 0:       (MURDER OCCURRED);
+-10, 0:     (Y DEAD);
+-10, 0:     (X DEAD);
+-10, 0:      (X IS Y);
+.4, -10:   (X INHERIT Y);
+
+%    RULE FOR X.PEOPLE WANTS TO KILL Y.PEOPLE BECAUSE OF AFFAIR
+$RULE      X.PEOPLE WKILL Y.PEOPLE,
+           X.PEOPLE MOTIVEIS REVENGE;
+-10, 0:    (MURDER OCCURRED);
+-10, 0:    (X DEAD);
+-10, 0:    (Y DEAD);
+-10, 0:    (X IS Y);
+.7, -10:   (X SPOUSE Y)
+            & (X WITNESS AFFAIR)
+            & (Y WASIN GARDEN);
+
+%    RULE FOR X.PEOPLE KILLING WITH CANDLEHOLDER
+$RULE        X.PEOPLE KCNDLHLR Y.PEOPLE:1,
+             X !=WKILL Y,
+             MURDERER USES CNDLHLR,
+             MURDER OCCURRED,
+             X MURDERER,
+             Y VICTIM;
+-10, 0:       (MURDER OCCURRED);
+.1, -10:      (X.PEOPLE WKILL>10 Y);
+-10, 0:      (Y DEAD);
+-10, 0:      (X DEAD);
+-10, 0:       (#P.PEOPLE DEAD);
+-10, 0:      (X IS Y);
+.2, 0:       (X IN GLROOM)
+             & (Y IN GLROOM);
+.3, 0:       (X MOTIVEIS REVENGE);
+
+%    RULE FOR X.PEOPLE KILLING WITH KNIFE
+$RULE        X.PEOPLE KKNIFE Y.PEOPLE:1,
+              X !=WKILL Y,
+              MURDERER USES KNIFE,
+              MURDER OCCURRED,
+             X MURDERER,
+             Y VICTIM;
+-10, 0:       (MURDER OCCURRED);
+.1, -10:     (X.PEOPLE WKILL>20 Y);
+-10, 0:      (Y DEAD);
+-10, 0:      (X DEAD);
+-10, 0:      (X IS Y);
+.1, -10:     (X WKILL Y);
+.6, 0:       (X MOTIVEIS REVENGE);
+
+
+%    RULE FOR X.PEOPLE KILLING WITH POISON
+$RULE        X.PEOPLE KPOISON Y.PEOPLE:1,
+             X !=WKILL Y,
+             MURDERER USES POISON,
+             MURDER OCCURRED,
+             X MURDERER,
+             Y VICTIM;
+-10, 0:       (MURDER OCCURRED);
+.1, -10:      (X.PEOPLE WKILL>10 Y)
+             & (X.PEOPLE WKILL<20 Y);
+-10, 0:      (Y DEAD);
+-10, 0:      (X DEAD);
+-10, 0:      (X IS Y);
+0.3, -10:    (X ISIN X.WOMEN);
+0.1, -10:    (X WKILL Y); 
+0.5, 0:      (X MOTIVEIS MONEY);
+
+%    RULE FOR X.PEOPLE KILLING WITH CAR
+$RULE        X.PEOPLE KCAR Y.PEOPLE:1,
+             X !=WKILL Y,
+             MURDERER USES CAR,
+             MURDER OCCURRED,
+             X MURDERER,
+             Y VICTIM;
+-10, 0:       (MURDER OCCURRED);
+-10, 0:      (Y DEAD);
+-10, 0:      (X DEAD);
+-10, 0:      (X IS Y);
+0.1, -10:    (X WKILL Y);
+0.5, 0:      (X MOTIVEIS WITNESS);
+
+%    RULE FOR X.PEOPLE KILLING WITH HANDS
+$RULE        X.PEOPLE KHANDS Y.PEOPLE:1,
+             X !=WKILL Y,
+             MURDERER USES HANDS,
+             MURDER OCCURRED,
+             X MURDERER,
+             Y VICTIM;
+-10, 0:       (MURDER OCCURRED);
+-10, 0:      (Y DEAD);
+-10, 0:      (X IS Y);
+-10, 0:      (X DEAD);
+.1, -10:     (X.PEOPLE WKILL>30 Y);
+0.3, -10:    (X ISIN X.MEN);
+.5, 0:       (X MOTIVEIS REVENGE);
+
+%    RULE FOR X.PEOPLE KILLING WITH GUN
+$RULE        X.PEOPLE KGUN Y.PEOPLE:1,
+             X !=WKILL Y,
+             MURDERER USES GUN,
+             MURDER OCCURRED,
+             X MURDERER,
+             Y VICTIM;
+-10, 0:       (MURDER OCCURRED);
+0, -10:      (X WKILL>10 Y);
+0.1, -10:    (X WKILL Y);
+-10, 0:      (X IS Y);
+-10, 0:      (Y DEAD);
+-10, 0:      (X DEAD);
+.5, 0:       (X MOTIVEIS WITNESS);
+
+%    RULE FOR X.PEOPLE KILLING WITH ROCK
+$RULE        X.PEOPLE KROCK Y.PEOPLE:1,
+             X !=WKILL Y,
+             MURDERER USES ROCK,
+             MURDER OCCURRED,
+             X MURDERER,
+             Y VICTIM;
+-10, 0:       (MURDER OCCURRED);
+-10, 0:      (Y DEAD);
+-10, 0:      (X DEAD);
+0.1, -10:    (X WKILL Y);
+0.2, 0:      (X WASIN GARDEN);
+-10, 0:      (X IS Y);
+0.3, -10:    (X ISIN X.MEN);
+0.5, 0:      (X MOTIVEIS REJECT);
+
+%    RULE FOR X.PEOPLE KILLING WITH FIRE
+$RULE        X.PEOPLE KFIRE Y.PEOPLE:1,
+             X !=WKILL Y,
+             ARSON OCCURS,
+             MURDERER USES FIRE,
+             MURDER OCCURRED,
+             X MURDERER,
+             Y VICTIM;
+-10, 0:       (MURDER OCCURRED);
+-10, 0:      (Y DEAD);
+-10, 0:      (X DEAD);
+-10, 0:      (X IS Y);
+.1, -10:     (X WKILL Y);
+.3, -10:     (X LIKES SMOKING);
+
+%    RULE FOR SELF DEFENSE TTDTFM = TRY TO DEFEND THEMSELVES FROM MURDERER
+$RULE        Y.PEOPLE:1 TTDTFM X.PEOPLE,
+             SELFDEFN OCCURRED;
+-10, 0:      (SELFDEFN OCCURRED);
+0, -10:      (MURDER OCCURRED);
+0, -10:      (Y VICTIM);
+0, -10:      (X MURDERER);
+-10, 0:      (X KFIRE Y);
+.1, 0:       (X KGUN Y);
+10, 0:       (X KROCK Y);
+10, 0:       (X KHANDS Y);
+-10, 0:      (X KCAR Y);
+-10, 0:      (X KPOISON Y);
+10, 0:       (X KKNIFE Y);
+10, 0:       (X KCNDLHLR Y);
+
+%    RULE FOR THE MURDERER BEING INJURED PROCESS OF MURDERING
+$RULE       X.PEOPLE HAS MRDRINJR,
+            Y.PEOPLE PUTUPA FIGHT;
+0, -10:     (MURDER OCCURRED); 
+0, -10:     (X MURDERER);
+0, -10:     (Y VICTIM);
+-10, 0:     (X HAS MRDRINJR);
+.1, -10:     (Y TTDTFM X);
+
+%    RULE FOR ADDITIONAL DEATHS DUE TO FIRE
+$RULE        X.PEOPLE SETFIRET Y.PEOPLE:1;
+0, -10:      (X WKILL Y);
+0, -10:      (X IN #R.ROOMS) & (Y IN R);
+0, -10:      (X IN Y);
+.25, 0:      (Y IS GLROOM);
+
+%    RULE FOR ACCIDENTAL DEATH BY FALLING INTO POND
+$RULE        Y.PEOPLE:1 DIESIN POND,
+              MURDERER IS NOBODY;
+0, -10:      (#R.PEOPLE WKILL Y);
+.001, 0:      (R IX1);
+.002, 0:      (R IX2);
+.01, 0:       (R IX3);
+
+%    RULE FOR Y.PEOPLE MAIMED
+$RULE        X.PEOPLE MAIM Y.PEOPLE,
+             Y MAIMED;
+-10, 0:      (Y DEAD);
+-10, 0:      (Y MAIMED);
+10, 0:       (X KFIRE Y);
+10, 0:       (X KGUN Y);
+10, 0:       (X KROCK Y);
+10, 0:       (X KHANDS Y);
+10, 0:       (X KCAR Y);
+10, 0:       (X KPOISON Y);
+10, 0:       (X KKNIFE Y);
+10, 0:       (X KCNDLHLR Y);
+
+%    RULE FOR Y.PEOPLE DYING
+$RULE        X.PEOPLE MURDERS Y.PEOPLE, 
+             Y DEAD;
+-10, 0:      (Y DEAD);
+0, -10:      (Y VICTIM);
+0, -10:      (X MURDERER);
+.4, 0:       (X.PEOPLE KFIRE Y);
+.8, 0:       (X KGUN Y);
+.65, 0:      (X KROCK Y);
+.6, 0:       (X KHANDS Y);
+.75, 0:      (X KCAR Y);
+.8, 0:       (X KPOISON Y);
+.7, 0:       (X KKNIFE Y);
+.64, 0:      (X KCANDEHOLDER Y);
+
+
+%    RULE FOR WHAT ROOM MURDER OCCURS IN
+$RULE        MRDRROOM IS Y.ROOMS:1,
+             BODY IN Y,
+             MRDRROOM FOUND,
+             X.PEOPLE MRDRIN Y;
+0, -10:      (X MURDERER);
+-10, 0:      (MRDRROOM FOUND);      
+10, 0:       (MURDERER USES ROCK) 
+             & (Y GARDEN);
+10, 0:       (MURDERER USES CAR) 
+             & (Y GARDEN);
+10, 0:       (MURDERER USES POISON)
+             & (Y IS DININGRM);
+10, 0:        (X IN Y) & (MURDER OCCURRED);
+
+%    RULE FOR RECORDING WHAT ROOM PEOPLE WERE IN DURING THE TIME OF THE MURDER
+$RULE        X.PEOPLE MDRTMEIN Y.ROOMS;
+0, -10:      (MURDER OCCURRED=0);
+10, 0:       (X IN Y);
+
+%    RULE FOR SOMEONE WITNESSING MURDER
+$RULE        Y.PEOPLE:1 SEES MURDER,
+             MURDER WAS SEEN;
+0, -10:      (MURDER OCCURRED=0);
+.15, 0:      (Y IN #R.ROOMS) & (MRDRROOM IS #R);
+.1, 0:       (Y NOSY);
+
+%    RULE FOR SOMEONE BEING RECORDED AS BEING AT SCENE OF MURDER
+$RULE        Y.PEOPLE ATCRMSCN;
+0, -10:      (MURDER OCCURRED=0);
+10, 0:       (Y IN #R.ROOMS) & (MRDRROOM IS #R);
+
+%    RULE FOR MURDER WEAPON IN X.ROOMS
+$RULE        MRDRWPN IN X.ROOMS,
+             MRDRWPN FOUND;
+-10, 0:      (MRDRWPN FOUND);
+10, 0:       (MRDRROOM IS X);
+
+
+%    RULE FOR MURDERER FRAMING Y.PEOPLE
+$RULE      X.PEOPLE FRAMES Y.PEOPLE:1,
+           Y FRAMED;
+-10, 0:    (DEHUME ACCUSES #P.PEOPLE);
+-10, 0:    (Y DEAD);
+0, -10:    (X MURDERER);
+-.5, 0:    (X LIKES Y);
+-.1, 0:    (X KNOWS Y);
+.3, 0:     (Y IN #R.ROOMS) & (MRDRROOM IS #R);
+.2, 0:     (X HATES Y);
+
+%    RULE FOR HEARING GUN AND CALLING POLICE
+$RULE    X.PEOPLE HEAR GUN, 
+         X.PEOPLE KNOW Y.PEOPLE:1,
+         Y CALL POLICE,
+         POLICE ARRIVE;
+-10, 0:     (POLICE ARRIVE);
+10, -10:  (MURDERER KGUN>10 Y);
+
+%    RULE FOR HEARING SCREAM AND CALLING POLICE
+$RULE    Y.PEOPLE:1 HEAR SCREAM, 
+         X.PEOPLE KNOW Y,
+         Y CALL POLICE,
+         POLICE ARRIVE;
+-10, 0:      (Y DEAD);
+-10, 0:      (POLICE ARRIVE);
+10, 0:  (MURDERER USES GUN) / (MURDERER USES ROCK) / (MURDERER USES KNIFE)/ (MURDERER USES CNDLHLR) / (MURDERER USES CAR) / (MURDER USES HAND);
+.2, 0:    (MURDERER USES Y);
+
+%    RULE FOR SOMEBODY GETTING INTO FIST FIGHT AND THE POLICE COMING
+$RULE     X.PEOPLE CALL POLICE,
+          POLICE COMETO FIGHT,
+          X.MEN FIGHTS Y.MEN:1;
+-10, 0:   (POLICE>10 CALLED);
+-10, 0:   (Y DEAD);
+-10, 0:   (X DEAD);
+0, -10:   (Y.MEN LIKES X.MEN);
+0, -10:   (Y.MEN FIGHTS X.MEN);
+.05, 0:   (Y.MEN IX2) & (X.MEN IX2);
+-.1, 0:   (Y.MEN IX3) & (X.MEN IX3);
+.4, 0:    [T > 2300/T < 2400];
+
+%    RULE FOR SOMEBODY FINDING MURDER WEAPON AND CALLING POLICE
+$RULE     Y.PEOPLE:1 CALL POLICE,
+          POLICE ARRIVE,
+          Y.PEOPLE FIND MRDRWPN,
+          POLICE ARRIVE;
+-10, 0:   (POLICE ARRIVE);
+-10, 0:   (Y DEAD);
+.7, 0:    (Y IN #R.ROOMS) & (MRDRROOM IS #R);
+.7, 0:    (Y MAIMED);
+
+%    RULE FOR POLICE FINDING DEAD BODY 
+$RULE     POLICE FIND BODY,
+          Y.PEOPLE:1 FOUND;
+0, -10: (POLICE ARRIVE);
+0, -10: (Y DEAD);
+-10, 0: (POLICE FIND BODY); 
+10, -.2:   (MURDERER USES FIRE) / (MURDERER USES POISON);
+10, 0:    (MURDERER USES CAR) / (MURDERER USES CAR) /
+          (MURDERER USES GUN) / (MURDERER USES CNDLHLR)
+          / (MURDERER USES KNIFE) / (MURDERER USES HANDS);
+10, 0:   (MURDERER USES ROCK);
+10,0:      (POLICE IN X.ROOMS) & (BODY IN X);
+
+%    RULE FOR Y.PEOPLE MOVING BODY
+$RULE     Y.PEOPLE MOVE BODY,
+          BODY ISIN X.ROOMS;
+-10, 0:   (POLICE FIND BODY);
+
+%    RULE FOR POLICE CALLING DETECTIVE HUME 
+$RULE     POLICE CALL DEHUME;
+0, -10:   (POLICE ARRIVE);
+-10, 0:     (POLICE CALL DEHUME);
+10, 0:      (POLICE FIND BODY);
+10, -10:    (POLICE ARRIVE>30);
+
+%    RULE FOR POLICE SUSPECTING X.PEOPLE
+$RULE    POLICE SUSPECT X.PEOPLE;
+0, -10:   (POLICE ARRIVE);
+-10, 0:   (X DEAD);
+-10, 0:   (#Z.PEOPLE CONFESS 2MURDER);
+.4, 0:    (X DISLIKES POLICE);
+-.4, 0:   (POLICE CALL DEHUME);
+-.1, .02: (X SEXY);
+.1,0:     (X MURDERER)
+
+%    RULE FOR POLICE QUESTIONING X.PEOPLE
+$RULE     POLICE QUESTION X.PEOPLE;
+-10, 0:   (POLICE QUESTION X);
+0, -10:   (POLICE ARRIVE);
+10, 0:    (X MURDERER);
+-10, 0:   (X DEAD);
+.3, 0:    (POLICE SUSPECT X);
+.66, 0:   (X HASRCRD);
+10, 0:    (X MARRIED VICTIM)
+
+
+%    RULE FOR FIRE DEPT. SHOWING UP
+$RULE     FIREDEPT ARRIVE;
+10, 0:    (ARSON OCCURS);
+
+%    RULE FOR X.PEOPLE DISLIKING POLICE 
+$RULE     X.PEOPLE DISLIKES POLICE;
+0, -10:   (POLICE ARRIVE);
+-10, 0:   (X DISLIKES POLICE);
+.1,0:     (X.PEOPLE LIKES GAMBLING);
+.05,0:    (X.PEOPLE LIKES NITECLB);
+.5, 0:    (X.PEOPLE HASRCRD);
+
+%    RULE FOR FINGERPRINT CLUE BEING FOUND
+$RULE     POLICE FIND FNGPRINT;
+0, -10:   (POLICE ARRIVE);
+-10, 0:   (POLICE FIND FNGPRINT);
+-10,0:    (MURDERER KFIRE Y.PEOPLE);
+.3, 0:    (MURDERER IN X.MEN);
+
+%    RULE FOR MURDER WEAPON BEING FOUND 
+$RULE     POLICE FIND MRDRWPN;
+0, -10:   (POLICE ARRIVE);
+0, -10:   (POLICE IN MRDRROOM);
+-10, 0:   (POLICE FIND MRDRWPN);
+0,-10:    (MURDERER KFIRE Y.PEOPLE);
+0,-10:    (MURDERER KPOISON Y.PEOPLE);
+0,-10:    (MURDERER KHANDS Y.PEOPLE);
+
+%    RULE FOR CORNERING OFF CRIME SCENE 
+$RULE      POLICE CORNER CRIMESCN;
+0, -10:   (POLICE ARRIVE);
+-10, 0:    (POLICE CORNER CRIMESCN);
+10,0:      (POLICE FIND BODY);
+
+%    RULE FOR MURDERER MURDERING THE POLICE
+$RULE     Y.PEOPLE:2 MURDERS POLICEMAN,
+          POLICEMAN DEAD;
+-10, 0:    (Y DEAD);
+-10, 0:    (POLICEMAN DEAD);
+0,-10:     (POLICE ARRIVE);
+.005, 0:     (Y DISLIKES POLICE);
+.05, 0:     (Y MURDERER);
+
+%    RULE FOR DEHUME QUESTIONING PEOPLE
+$RULE      DEHUME QUESTIONS X.PEOPLE;
+0, -10:    (POLICE CALL DEHUME);
+-10, 0:    (X DEAD);
+-10, 0:    (DEHUME QUESTIONS X);
+10, 0:     (POLICE QUESTION X);
+
+%    RULE FOR WITNESS TO MURDER COMING FORWARD
+$RULE      Y.PEOPLE:1 TIPSOFF DEHUME;
+0, -10:    (MURDER WAS SEEN);
+-10, 0:    (Y TIPSOFF DEHUME);
+.2, -10:   (Y SEES MURDER);
+-.3, .1:   (Y LIKES #R.PEOPLE) & (#R MURDERER);
+.2, 0:     (Y IX1);
+.3, 0:     (Y IX2);
+.4, 0:     (Y IX3);
+
+%    RULE FOR DETECTIVE HUME INVESTIGATING ROOMS
+$RULE     DEHUME INV Y.ROOMS,
+            Y SEARCHB DEHUME;
+0, -10:    (POLICE CALL DEHUME);
+0, -10:    (Y SEARCHB DEHUME);
+10, .5:    (MRDRROOM IS Y);
+
+%    RULE FOR DEHUME INVESTIGATING WHAT THE MOTIVE IS
+$RULE      DEHUME DETERMIN MOTIVE,
+           DEHUME DEDUCTMT Y.MOTIVES:1;
+0, -10:    (POLICE CALL DEHUME);
+-10, 0:    (DEHUME DETERMIN MOTIVE);
+.9, 0:     (MURDERER USES ROCK) & (Y IS REJECT);
+.9, 0:     (#S.WOMEN MURDERER) & (#W.MEN REJECT #S) & (#W VICTIM) & (Y IS REJECT);
+.9, 0:     (MURDERER USES CAR) & (Y IS WITNESS);
+.9, 0:     (S MURDERER) & (S HAS AFFAIR);
+.9, 0:     (MURDERER USES CNDLHLR) & (Y IS REVENGE);
+.9, 0:     (MURDERER USES KNIFE) & (Y IS REVENGE);
+.9, 0:     (MURDERER USES HANDS) & (Y IS REVENGE);
+.9, 0:     (MURDERER USES POISON) & (Y IS MONEY);
+10, 0:     (#P.PEOPLE MOTIVEIS REJECT);
+10, 0:     (#P.PEOPLE MOTIVEIS REVENGE);
+10, 0:     (#P.PEOPLE MOTIVEIS MONEY);
+10, 0:     (#P.PEOPLE MOTIVEIS WITNESS);
+
+%    RULE FOR DETERMINING SMOKERS IF ARSON OCCURS;
+$RULE      X.PEOPLE LIKELY ARSONIST,
+           ARSONIST DETERMND;
+0, -10:    (ARSON OCCURS);
+-10, 0:    (ARSONIST DETERMND);
+.2, -10:   (X SMOKES CIGARS);
+.4, -10:   (X MURDERER); 
+
+%    RULE FOR DETECTIVE HUME INVESTIGATING PEOPLE
+$RULE      DEHUME SUSPECTS X.PEOPLE,
+           X IS S1;
+-10, 0:    (X DEAD);
+-10, 0:      (X IS S1);
+-10, 0:    (DEHUME SUSPECTS X);
+-10, 0:    (#Z.PEOPLE CONFESS 2MURDER);
+0, -10:    (POLICE CALL DEHUME);
+.2, 0:     (POLICE QUESTION X);
+.7, 0:     (X FRAMED);
+
+$RULE      X.PEOPLE IS S2;
+-10, 0:    (DEHUME SUSPECTS X);
+-10, 0:    (#Z.PEOPLE CONFESS 2MURDER);
+0, -10:    (POLICE CALL DEHUME);
+0, -10:      (X IS S1);
+-10, 0:      (X IS S2);
+.33, 0:    (X FRAMED);
+.5, 0:     (X MDRTMEIN #R.ROOMS) & (MRDROOM IS #R);
+.5, 0:     (X WASIN R) & (MRDROOM IS R);
+.1, 0:     (X FIND MRDRWPN);
+.2, 0:     (X MURDERER);
+
+%    RULE FOR QUESTIONING SPOUSE
+$RULE      DEHUME QSPOUSEO X.PEOPLE,
+           Y.PEOPLE QUESTNB DEHUME;
+0, -10:    (X IS S1);
+-10, 0:    (#Z.PEOPLE CONFESS 2MURDER);
+-10, 0:    (Y QUESTNB DEHUME);
+10, 0:     (X MARRIED Y);
+
+%   RULE FOR PEOPLE LYING TO DHUME
+$RULE      X.PEOPLE LIE2 DEHUME;
+-10, 0:    (X DEAD);
+-10, 0:    (#Z.PEOPLE CONFESS 2MURDER);
+0, -10:    (POLICE CALL DEHUME);
+-10, 0:    (X LIE2 DEHUME);
+.1, 0:     (DEHUME SUSPECTS X);
+.1, 0:     (POLICE QUESTION X);
+.2, 0:     (X FRAMED);
+.3, 0:     (DEHUME QSPOUSEO X.PEOPLE);
+
+%   RULE FOR PEOPLE GETTING CAUGHT LYING TO DHUME
+$RULE      X.PEOPLE GCLYINB DEHUME;
+-10, 0:    (X DEAD);
+-10, 0:    (X GCLYINB DEHUME);
+-10, 0:    (#Z.PEOPLE CONFESS 2MURDER);
+.2, 0:     (DEHUME SUSPECTS X);
+0, -10:    (POLICE CALL DEHUME);
+.2, 0:     (POLICE QUESTION X);
+.7, 0:     (X FRAMED);
+.5, -10:   (X.PEOPLE LIE2 DEHUME);
+
+%    RULE FOR DETECTIVE HUME DECLARING MURDERER
+$RULE      DEHUME ACCUSES Y.PEOPLE:1;
+0, -10:    (POLICE CALL DEHUME);
+0, -10:    (DEHUME DETERMIN MOTIVE);
+-10, 0:    (Y IS DEAD);
+-10, 0:    (DEHUME ACCUSES #P.PEOPLE);
+10, 0:     (Y CONFESS 2MURDER);
+.5, -10:   (Y IS S1);
+.8, 0:     (Y IS S2);
+.4, 0:     (Y GCLYINB DEHUME);
+.5, 0:     (Y MURDERER);
+.3, 0:     (Y HAS MRDRINJR);
+
+%    RULE FOR CONFESSION 
+$RULE      Y.PEOPLE:1 CONFESS 2MURDER;
+-10, 0:     (Y CONFESS 2MURDER);
+0, -10:    (POLICE CALL DEHUME);
+.15, 0:     (DEHUME ACCUSES Y);
+.8, 0:     (DEHUME ACCUSES Y) & (Y MURDERER);
+
+%   RULE FOR SUSPECT FIGHTING DEHUME 
+$RULE      Y.PEOPLE:1 SCREAMAT DEHUME;
+0.15, -10:    (DEHUME ACCUSES>10 Y);
+-10, 10:   (Y CONFESS 2MURDER);
+
+%   RULE FOR SUSPECT GETTING ARRESTED
+$RULE      DEHUME ARRESTS Y.PEOPLE:1;
+-10, 0:    (DEHUME ARRESTS Y);
+0, -10:    (DEHUME ACCUSES Y);
+10, 0:     (Y CONFESS 2MURDER);
+.6, 0:     (Y FIGHTS DEHUME);
+
+%    RULE FOR POLICE ARRESTING X.PEOPLE
+%$RULE    POLICE ARREST X.PEOPLE;
+%10, -10: (POLICE ARRESTBC MARSON);
+
+%    RULE FOR X.PEOPLE RESISTING ARREST
+$RULE    X.PEOPLE RESIST POLICE;
+0, -10:   (POLICE ARE CALLED);
+.3, 0:    (X MURDERER);
