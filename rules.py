@@ -57,9 +57,8 @@ class Rule:
         variable_ordering = list(binding_candidates.keys())
         candidate_bindings = list(itertools.product(*binding_candidates.values()))
         for ordered_candidates_list in candidate_bindings:
-            if not config.ALLOW_DUPLICATE_ENTITIES_IN_VARIABLE_BINDINGS:
-                if len(set(ordered_candidates_list)) != len(ordered_candidates_list):
-                    continue
+            if len(set(ordered_candidates_list)) != len(ordered_candidates_list):
+                continue
             candidate_binding = {}
             for i, variable_name in enumerate(variable_ordering):
                 candidate_binding[variable_name] = ordered_candidates_list[i]

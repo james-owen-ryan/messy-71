@@ -13,7 +13,7 @@ RANDOM_SEED = _RANDOM_SEED or int(round(time.time()))
 # this is expressed as an integer representing a time in 24-hour-clock notation. For instance,
 # 1910 is 7:10 PM, whereas 2060 is not a valid time.
 START_TIME = 1700
-# The length, in minutes, of each simulated timestep. Klein et al. (1971) sets this to 10 minutes.
+# The length, in minutes, of each simulated time frame. Klein et al. (1971) sets this to 10 minutes.
 TIMESTEP = 10
 # The number of time frames to simulate in total
 NUMBER_OF_TIME_FRAMES = 30
@@ -22,15 +22,12 @@ NUMBER_OF_TIME_FRAMES = 30
 # conditions with extreme probabilities increments that will immediately force an action to be taken
 # or to be abandoned. Klein used -10 and 10 as the respective thresholds for such short-circuiting.
 SHORT_CIRCUIT_PROBABILITY_INCREMENT_ABSOLUTE_THRESHOLD = 10.0
-# This parameter determines whether entities will be allowed to appear multiple times in the bindings
-# for an action. For instance,
-ALLOW_DUPLICATE_ENTITIES_IN_VARIABLE_BINDINGS = True
 # Paths for the three procedural-content files that drive simulation: a rules file containing definitions
 # for all of the simulation rules; a file containing initial conditions for the simulated storyworld; and
 # a file containing lexical expressions for the entities defined in the preceding files (this file is used
 # to drive the "narrative style control monitor" that renders the surface expression of a story). We have
 # included example files created by Theresa Chen and Piper Welch.
-PATH_TO_RULES_DIRECTORY = "content"
+PATH_TO_RULES_DIRECTORY = "rules"
 PATH_TO_RULES_FILE = os.path.join(PATH_TO_RULES_DIRECTORY, "murder_story_rules.txt")
 PATH_TO_INITIAL_CONDITIONS_FILE = os.path.join(PATH_TO_RULES_DIRECTORY, "murder_story_initial_conditions.txt")
 PATH_TO_LEXICAL_EXPRESSIONS_FILE = os.path.join(PATH_TO_RULES_DIRECTORY, "murder_story_lexical_expression_lists.txt")
