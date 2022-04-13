@@ -25,6 +25,12 @@ class Compiler:
             blob = blob.replace('  ', ' ')
         # Remove the asterisks (since to our current knowledge it does nothing)
         blob = blob.replace('*', '')
+        # Replace '≠' symbols with '!=', for ease of parsing, etc. Klein's original
+        # language appears to have used '≠'.
+        blob = blob.replace('≠', '!=')
+        # Replace '←' symbols with '<-', for ease of parsing, etc. Klein's original
+        # language appears to have used '←'.
+        blob = blob.replace('←', '<-')
         # Break into individual rule definitions
         rule_definitions = [line.strip() for line in blob.split('$RULE') if line]
         # Parse each rule definition

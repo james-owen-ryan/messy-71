@@ -10,7 +10,6 @@
 % the storyworld. This system also takes inspiration from the completed story generator
 % presented in Klein et al. (1973).
 
-
 %      PRELUDE SCENE: GEORGE AND LILI HAVE AFFAIR
 $RULE        GEORGE AFFAIRW LILI;
 0, -10:      [T < 1720];
@@ -26,7 +25,7 @@ $RULE        GEORGE RICH,
 $RULE        GEORGE IN DEBT;
 0, -10:      [T < 1731] & [T > 1720];
 0, -10:      (GEORGE WINS=0 BLCKJACK);
-10, 0:       (GEORGE !=WINS BLCKJACK); 
+10, 0:       (GEORGE ≠WINS BLCKJACK); 
 
 %      PRELUDE SCENE: OBTAINING LIFE INSURANCE 
 $RULE        Y.PEOPLE HAS LFINSRNC;
@@ -40,10 +39,10 @@ $RULE        Y.PEOPLE HAS LFINSRNC;
 
 %      RULE FOR INVITING PEOPLE TO THE PARTY
 $RULE        GEORGE INVITES Y.PEOPLE,
-             GEORGE !=WANTS PARTY;
+             GEORGE ≠WANTS PARTY;
 -10, 0:      (GEORGE DEAD);
 -10, 0:      (Y DEAD);
--10, 0:      (GEORGE !=WANTS PARTY);
+-10, 0:      (GEORGE ≠WANTS PARTY);
 10, 0:       (Y ISIN COMPUTING)
            & (GEORGE KNOWS/LIKES/LOVES Y);
 .7, 0:       (GEORGE LIKES/LOVES Y);
@@ -53,7 +52,7 @@ $RULE        GEORGE INVITES Y.PEOPLE,
 
 %     RULE FOR ARRIVING AT GEORGE'S LIVING ROOM
 $RULE        X.PEOPLE IN GLROOM,
-             GEORGE !=INVITES X;
+             GEORGE ≠INVITES X;
 -10, 0:      (GEORGE DEAD);
 -10, 0:      (MURDER OCCURRED);
 -10, 0:      (X DEAD);
@@ -71,10 +70,10 @@ $RULE        X.PEOPLE GET DRINK;
 -.1, 0:      [T > 2200/ T < 1730];
 -.1, 0:      [T > 2300/ T < 1730];
 -.1, 0:      [T < 1730];
-.7, 0:       (X !=IX1 & GET>19 DRINK);
+.7, 0:       (X ≠IX1 & GET>19 DRINK);
 .3, 0:       (X LIKES ALCOHOL);
 .4, 0:       (X SAD);
-.8, 0:       (X !=GET DRINK);
+.8, 0:       (X ≠GET DRINK);
 
 %     RULE FOR ENTERING STATES IX1, IX2, IX3
 $RULE        X.PEOPLE IX1;
@@ -83,25 +82,25 @@ $RULE        X.PEOPLE IX1;
 $RULE        X.PEOPLE IX2,
              X        IX1;
 -10, 0:      (X DEAD);
-.9, 0:       (X IX1!=0 & IX1<21 & GET=0 DRINK);
+.9, 0:       (X IX1≠0 & IX1<21 & GET=0 DRINK);
 $RULE        X.PEOPLE IX3,
              X        IX2,
              X        IX1;
 -10, 0:      (X DEAD);
-.9, 0:       (X IX2!=0 & IX2<21 & GET=0 DRINK);
+.9, 0:       (X IX2≠0 & IX2<21 & GET=0 DRINK);
 
 %     RULE FOR MAKING PEOPLE LEAVE IX1, IX2, IX3
-$RULE        X.PEOPLE !=IX3;
+$RULE        X.PEOPLE ≠IX3;
 -10, 0:      (X DEAD);
 .6, 0:       (X GET>90 DRINK);
 
-$RULE        X.PEOPLE !=IX2;
+$RULE        X.PEOPLE ≠IX2;
 -10, 0:      (X DEAD);
-.7, 0:       (X !=IX3 & GET>120 DRINK);
+.7, 0:       (X ≠IX3 & GET>120 DRINK);
 
-$RULE        X.PEOPLE !=IX3;
+$RULE        X.PEOPLE ≠IX3;
 -10, 0:      (X DEAD);
-.8, 0:       (X !=IX2 & GET>150 DRINK);
+.8, 0:       (X ≠IX2 & GET>150 DRINK);
 
 %     RULE FOR FOR DETERMINING WHETHER X.WOMEN PROPOSITIONS SOME MAN
 $RULE        X.WOMEN PROPS Y.MEN:1;
@@ -136,7 +135,7 @@ $RULE       Y.MEN:1 REJECTS X.WOMEN;
 -10, 0:     (Y REJECTS X);
 -10, 0:     (X PROPS Y)
           & (Y ACCEPTSP X);
-10, 0:      (X PROPS=20 Y) & (Y !=ACCEPTSP=10 X);
+10, 0:      (X PROPS=20 Y) & (Y ≠ACCEPTSP=10 X);
 
 
 %    RULE FOR GEORGE WITNESSING X'S PROPOSITION
@@ -152,9 +151,9 @@ $RULE    GEORGE WPROP Y.MEN,
 
 %     RULE FOR DETERMINING WHETHER GOING TO GARDEN OCCURS (AND REMEMBERING THAT GARDEN OCCURRED)
 $RULE        X.WOMEN HAS AFFAIR,
-             Y.MEN:1 !=IN GLROOM,
+             Y.MEN:1 ≠IN GLROOM,
              Y IN GARDEN,
-             X !=IN GLROOM,
+             X ≠IN GLROOM,
              X WASIN GARDEN,
              X AFFAIRW Y,
              AFFAIR AT PARTY,
@@ -199,8 +198,8 @@ $RULE    Y.PEOPLE BLACKML X.WOMEN;
 %    RULE FOR PEOPLE HAVING AFFAIR RETURNING TO LIVING ROOM
 $RULE       X.WOMEN IN GLROOM,
             Y.MEN:1 IN GLROOM,
-            X !=IN GARDEN,
-            Y !=IN GARDEN;
+            X ≠IN GARDEN,
+            Y ≠IN GARDEN;
 -10, 0:     (X IN GLROOM);
 10, -10:    (X AFFAIRW Y);
 
@@ -248,7 +247,7 @@ $RULE        GEORGE WSLAP Y.PEOPLE;
 0, -.1:      (GEORGE IX1);
 0, -.1:      (GEORGE IX2);
 0, .3:       (GEORGE IX3);
-.5, 0:       (GEORGE HATES Y) & (Y ACCEPTSP/<-ACCEPTSP MARGARET);
+.5, 0:       (GEORGE HATES Y) & (Y ACCEPTSP/←ACCEPTSP MARGARET);
 .1, 0:       (Y IS GEORGE);
 
 %    RULE FOR MARGARET WANTS TO SLAP Y.PEOPLE
@@ -263,7 +262,7 @@ $RULE        MARGARET WSLAP Y.PEOPLE;
 .1, 0:       (Y IS GEORGE);
 
 %    RULE FOR Y.PEOPLE:1 MOVING TO THE BATHROOM
-$RULE       X.PEOPLE !=IN Y.ROOMS:1,
+$RULE       X.PEOPLE ≠IN Y.ROOMS:1,
             X IN BATHROOM,
             X WASIN BATHROOM;
 -10, 0:     (X DEAD);
@@ -273,7 +272,7 @@ $RULE       X.PEOPLE !=IN Y.ROOMS:1,
 
 %    RULE FOR Y.PEOPLE:1 COMING BACK TO LIVING ROOM
 $RULE       Y.PEOPLE:1 IN GLROOM,
-            Y !=IN BATHROOM;
+            Y ≠IN BATHROOM;
 0, -10:     (Y IN=0 BATHROOM);
 -10, 0:     (Y IN GLROOM);
 10, 0:      (Y WASIN BATHROOM);
@@ -320,7 +319,7 @@ $RULE      X.PEOPLE WKILL Y.PEOPLE,
 
 %    RULE FOR X.PEOPLE KILLING WITH CANDLEHOLDER
 $RULE        X.PEOPLE KCNDLHLR Y.PEOPLE:1,
-             X !=WKILL Y,
+             X ≠WKILL Y,
              MURDERER USES CNDLHLR,
              MURDER OCCURRED,
              X MURDERER,
@@ -337,7 +336,7 @@ $RULE        X.PEOPLE KCNDLHLR Y.PEOPLE:1,
 
 %    RULE FOR X.PEOPLE KILLING WITH KNIFE
 $RULE        X.PEOPLE KKNIFE Y.PEOPLE:1,
-              X !=WKILL Y,
+              X ≠WKILL Y,
               MURDERER USES KNIFE,
               MURDER OCCURRED,
              X MURDERER,
@@ -353,7 +352,7 @@ $RULE        X.PEOPLE KKNIFE Y.PEOPLE:1,
 
 %    RULE FOR X.PEOPLE KILLING WITH POISON
 $RULE        X.PEOPLE KPOISON Y.PEOPLE:1,
-             X !=WKILL Y,
+             X ≠WKILL Y,
              MURDERER USES POISON,
              MURDER OCCURRED,
              X MURDERER,
@@ -370,7 +369,7 @@ $RULE        X.PEOPLE KPOISON Y.PEOPLE:1,
 
 %    RULE FOR X.PEOPLE KILLING WITH CAR
 $RULE        X.PEOPLE KCAR Y.PEOPLE:1,
-             X !=WKILL Y,
+             X ≠WKILL Y,
              MURDERER USES CAR,
              MURDER OCCURRED,
              X MURDERER,
@@ -384,7 +383,7 @@ $RULE        X.PEOPLE KCAR Y.PEOPLE:1,
 
 %    RULE FOR X.PEOPLE KILLING WITH HANDS
 $RULE        X.PEOPLE KHANDS Y.PEOPLE:1,
-             X !=WKILL Y,
+             X ≠WKILL Y,
              MURDERER USES HANDS,
              MURDER OCCURRED,
              X MURDERER,
@@ -399,7 +398,7 @@ $RULE        X.PEOPLE KHANDS Y.PEOPLE:1,
 
 %    RULE FOR X.PEOPLE KILLING WITH GUN
 $RULE        X.PEOPLE KGUN Y.PEOPLE:1,
-             X !=WKILL Y,
+             X ≠WKILL Y,
              MURDERER USES GUN,
              MURDER OCCURRED,
              X MURDERER,
@@ -414,7 +413,7 @@ $RULE        X.PEOPLE KGUN Y.PEOPLE:1,
 
 %    RULE FOR X.PEOPLE KILLING WITH ROCK
 $RULE        X.PEOPLE KROCK Y.PEOPLE:1,
-             X !=WKILL Y,
+             X ≠WKILL Y,
              MURDERER USES ROCK,
              MURDER OCCURRED,
              X MURDERER,
@@ -430,7 +429,7 @@ $RULE        X.PEOPLE KROCK Y.PEOPLE:1,
 
 %    RULE FOR X.PEOPLE KILLING WITH FIRE
 $RULE        X.PEOPLE KFIRE Y.PEOPLE:1,
-             X !=WKILL Y,
+             X ≠WKILL Y,
              ARSON OCCURS,
              MURDERER USES FIRE,
              MURDER OCCURRED,
