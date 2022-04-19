@@ -1,2 +1,2 @@
 # MESSY-71
-A reimplementation of Sheldon Klein's MESSY-71, a framework for simulationist story generation.
+A Python 3 reimplementation of Sheldon Klein's MESSY-71, a framework for simulationist story generation. Documentation coming soon.
